@@ -35,15 +35,15 @@ INICIO = "2025-01-01"
 FIM = date.today().isoformat()
 
 LAYOUT_BASE = dict(
-    template="plotly_white",
-    font=dict(family="Inter, Segoe UI, Arial", size=13, color="#374151"),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
+    template="plotly_dark",
+    font=dict(family="'JetBrains Mono', monospace", size=12, color="#71717a"),
+    paper_bgcolor="#141417",
+    plot_bgcolor="#141417",
     margin=dict(l=10, r=10, t=50, b=10),
     hovermode="x unified",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-    xaxis=dict(showgrid=True, gridcolor="#f1f5f9", linecolor="#e2e8f0"),
-    yaxis=dict(showgrid=True, gridcolor="#f1f5f9", linecolor="#e2e8f0"),
+    xaxis=dict(showgrid=True, gridcolor="#222228", linecolor="#222228", zeroline=False),
+    yaxis=dict(showgrid=True, gridcolor="#222228", linecolor="#222228", zeroline=False),
 )
 
 
