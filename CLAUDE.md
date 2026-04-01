@@ -48,3 +48,13 @@ GET / → buscar_dados() [yfinance → DataFrames]
 - `LAYOUT_BASE` — shared Plotly layout (fonts, grid, responsiveness)
 
 Data is fetched for the fixed range `2025-01-01` to today on every page load — no caching layer exists.
+
+## GitHub Repository
+
+Repository: `https://github.com/CassioPacheco/stock-dashboard`
+
+### Auto-sync
+
+A Claude Code hook in `.claude/settings.local.json` automatically commits and pushes to `origin/main` after every file edit (`Edit`, `Write`, `NotebookEdit` tools). Each auto-commit message includes a timestamp: `Auto-update: YYYY-MM-DD HH:MM:SS`.
+
+The hook runs asynchronously and does not block Claude Code. If there are no changes since the last commit, the push is skipped silently.
