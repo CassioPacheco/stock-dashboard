@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where python:*)",
+      "Read(//c/Users/Joana/AppData/Local/Programs/Python//**)",
+      "Bash(ls /c/Python*)",
+      "Bash(python app.py)",
+      "Bash(python -c ':*)"
+    ]
+  }
+}

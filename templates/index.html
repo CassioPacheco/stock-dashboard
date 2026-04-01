@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B3 Dashboard — Ações Brasileiras 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --header-from: #0f172a;
+      --header-to: #1e3a5f;
+      --green: #16a34a;
+      --red: #dc2626;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+      --shadow-hover: 0 4px 12px rgba(0,0,0,0.12), 0 8px 28px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--header-from) 0%, var(--header-to) 100%);
+      padding: 36px 48px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .header-title h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .header-meta span { color: #e2e8f0; font-weight: 500; }
+
+    /* ── STOCK BADGES ── */
+    .stock-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stock-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 8px 14px;
+    }
+
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .badge-ticker {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .badge-name {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── KPI CARDS ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      header { padding: 24px 20px; }
+      main { padding: 20px 16px 40px; }
+    }
+
+    .kpi-card {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .kpi-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .kpi-company {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kpi-color-bar {
+      width: 4px;
+      height: 32px;
+      border-radius: 4px;
+    }
+
+    .kpi-company-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .kpi-ticker {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .kpi-badge-ytd {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .kpi-badge-ytd.pos { background: #dcfce7; color: #166534; }
+    .kpi-badge-ytd.neg { background: #fee2e2; color: #991b1b; }
+
+    .kpi-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .kpi-price-prefix {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+
+    .kpi-variation {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .kpi-variation-value {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .kpi-variation-value.pos { color: var(--green); }
+    .kpi-variation-value.neg { color: var(--red); }
+
+    .kpi-variation-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .kpi-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 14px 0;
+    }
+
+    .kpi-stats-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .kpi-stat {
+      text-align: center;
+    }
+
+    .kpi-stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    .kpi-stat-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 3px;
+    }
+
+    /* ── CHART CARDS ── */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: -12px;
+    }
+
+    .chart-card {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .chart-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 0;
+    }
+
+    .chart-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .chart-card-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .chart-tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 420px;
+      padding: 8px 4px 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--header-from);
+      color: #475569;
+      padding: 24px 48px;
+      font-size: 0.82rem;
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-inner a { color: #64748b; text-decoration: none; }
+    .footer-inner a:hover { color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title">
+        <h1>B3 Dashboard — Ações Brasileiras</h1>
+        <p>Cotação, retorno e análise técnica de PETR4, ITUB4 e SANB11 · Dados via Yahoo Finance</p>
+      </div>
+      <div class="header-meta">
+        Atualizado em <span>{{ atualizado }}</span>
+      </div>
+    </div>
+    <div class="stock-badges">
+      {% for nome, s in stats.items() %}
+      <div class="stock-badge">
+        <div class="badge-dot" style="background:
+          {% if nome == 'Petrobras' %}#2563eb
+          {% elif nome == 'Itaú' %}#f97316
+          {% else %}#ef4444{% endif %}
+        "></div>
+        <div>
+          <div class="badge-ticker">{{ s.ticker }}</div>
+          <div class="badge-name">{{ nome }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    {% for nome, s in stats.items() %}
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-company">
+          <div class="kpi-color-bar" style="background:
+            {% if nome == 'Petrobras' %}#2563eb
+            {% elif nome == 'Itaú' %}#f97316
+            {% else %}#ef4444{% endif %}
+          "></div>
+          <div>
+            <div class="kpi-company-name">{{ nome }}</div>
+            <div class="kpi-ticker">{{ s.ticker }}.SA · B3</div>
+          </div>
+        </div>
+        <div class="kpi-badge-ytd {{ 'pos' if s.retorno_ytd >= 0 else 'neg' }}">
+          YTD {{ '%+.1f' | format(s.retorno_ytd) }}%
+        </div>
+      </div>
+
+      <div class="kpi-price">
+        <span class="kpi-price-prefix">R$</span>{{ '%.2f' | format(s.preco) }}
+      </div>
+
+      <div class="kpi-variation">
+        <span class="kpi-variation-value {{ 'pos' if s.variacao_dia >= 0 else 'neg' }}">
+          {{ '%+.2f' | format(s.variacao_dia) }} ({{ '%+.2f' | format(s.variacao_dia_pct) }}%)
+        </span>
+        <span class="kpi-variation-label">hoje</span>
+      </div>
+
+      <hr class="kpi-divider" />
+
+      <div class="kpi-stats-row">
+        <div class="kpi-stat">
+          <div class="kpi-stat-label">Mín. 2025</div>
+          <div class="kpi-stat-value">R$ {{ '%.2f' | format(s.minimo) }}</div>
+        </div>
+        <div class="kpi-stat">
+          <div class="kpi-stat-label">Máx. 2025</div>
+          <div class="kpi-stat-value">R$ {{ '%.2f' | format(s.maximo) }}</div>
+        </div>
+        <div class="kpi-stat">
+          <div class="kpi-stat-label">Retorno YTD</div>
+          <div class="kpi-stat-value" style="color: {{ '#16a34a' if s.retorno_ytd >= 0 else '#dc2626' }}">
+            {{ '%+.1f' | format(s.retorno_ytd) }}%
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- CHART: Preço -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">Preço de Fechamento</div>
+        <div class="chart-card-subtitle">Evolução do preço diário em reais · Jan 2025 – hoje</div>
+      </div>
+      <span class="chart-tag">R$ / dia</span>
+    </div>
+    <div class="chart-container" id="chart-preco"></div>
+  </div>
+
+  <!-- CHART: Retorno -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">Retorno Acumulado em 2025</div>
+        <div class="chart-card-subtitle">Performance relativa desde 01/01/2025 · base 0%</div>
+      </div>
+      <span class="chart-tag">% acumulado</span>
+    </div>
+    <div class="chart-container" id="chart-retorno"></div>
+  </div>
+
+  <!-- CHART: Volume -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">Volume Negociado</div>
+        <div class="chart-card-subtitle">Quantidade de ações negociadas por dia na B3</div>
+      </div>
+      <span class="chart-tag">qtd. ações</span>
+    </div>
+    <div class="chart-container" id="chart-volume"></div>
+  </div>
+
+  <!-- CHART: Candlestick -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-card-title">Candlestick — OHLC</div>
+        <div class="chart-card-subtitle">Abertura, máxima, mínima e fechamento · selecione a ação</div>
+      </div>
+      <span class="chart-tag">OHLC</span>
+    </div>
+    <div class="chart-container" id="chart-candlestick"></div>
+  </div>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-inner">
+    <span>Dados fornecidos por <a href="#">Yahoo Finance</a> · Uso educacional</span>
+    <span>B3 Dashboard © 2025 · Atualizado em {{ atualizado }}</span>
+  </div>
+</footer>
+
+<script>
+  const config = { responsive: true, displayModeBar: true, displaylogo: false, locale: "pt-BR" };
+
+  const graficos = [
+    { id: "chart-preco",       data: {{ graph_preco | safe }} },
+    { id: "chart-retorno",     data: {{ graph_retorno | safe }} },
+    { id: "chart-volume",      data: {{ graph_volume | safe }} },
+    { id: "chart-candlestick", data: {{ graph_candlestick | safe }} },
+  ];
+
+  graficos.forEach(({ id, data }) => {
+    Plotly.newPlot(id, data.data, data.layout, config);
+  });
+</script>
+
+</body>
+</html>
