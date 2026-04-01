@@ -14,15 +14,15 @@ ACOES = {
 }
 
 CORES = {
-    "Petrobras": "#2563eb",
-    "Itaú": "#f97316",
-    "Santander": "#ef4444",
+    "Petrobras": "#60a5fa",
+    "Itaú": "#fb923c",
+    "Santander": "#f87171",
 }
 
 CORES_FILL = {
-    "Petrobras": "rgba(37,99,235,0.07)",
-    "Itaú": "rgba(249,115,22,0.07)",
-    "Santander": "rgba(239,68,68,0.07)",
+    "Petrobras": "rgba(96,165,250,0.08)",
+    "Itaú": "rgba(251,146,60,0.08)",
+    "Santander": "rgba(248,113,113,0.08)",
 }
 
 TICKERS_DISPLAY = {
