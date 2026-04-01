@@ -185,9 +185,9 @@ def grafico_candlestick(dados):
             xanchor="left",
             y=1.18,
             yanchor="top",
-            bgcolor="#f8fafc",
-            bordercolor="#e2e8f0",
-            font=dict(size=13),
+            bgcolor="#1c1c21",
+            bordercolor="#2e2e36",
+            font=dict(size=12, color="#f4f4f5", family="'JetBrains Mono', monospace"),
         )],
     }
     fig.update_layout(**layout)
